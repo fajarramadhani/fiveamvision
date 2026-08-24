@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-night font-sans text-bone antialiased;
+  }
+
+  ::selection {
+    background: rgba(157, 190, 232, 0.35);
+    color: #f3f1ec;
+  }
+
+  :focus-visible {
+    outline: 2px solid #9dbee8;
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-[80rem] px-5 sm:px-8 lg:px-12;
+  }
+
+  .eyebrow {
+    @apply mb-5 block text-[11px] font-semibold uppercase tracking-widest text-mist sm:text-xs;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-3 bg-bone px-8 py-4 text-xs font-bold uppercase tracking-widest text-night transition-colors duration-300 ease-smooth hover:bg-mist;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-3 border border-bone/25 px-8 py-4 text-xs font-bold uppercase tracking-widest text-bone transition-colors duration-300 ease-smooth hover:border-bone hover:bg-bone hover:text-night;
+  }
+
+  .btn-dark {
+    @apply inline-flex items-center justify-center gap-3 bg-night px-8 py-4 text-xs font-bold uppercase tracking-widest text-bone transition-colors duration-300 ease-smooth hover:bg-navy-700;
+  }
+
+  .btn-outline-dark {
+    @apply inline-flex items-center justify-center gap-3 border border-night/25 px-8 py-4 text-xs font-bold uppercase tracking-widest text-night transition-colors duration-300 ease-smooth hover:border-night hover:bg-night hover:text-bone;
+  }
+
+  .section-light {
+    @apply bg-bone text-night;
+  }
+
+  /* Placeholder visual — stands in until real FiveAM photography is added */
+  .ph-visual {
+    background:
+      radial-gradient(120% 90% at 85% 8%, rgba(30, 65, 102, 0.5), transparent 60%),
+      radial-gradient(130% 110% at 8% 100%, rgba(21, 48, 79, 0.85), transparent 55%),
+      linear-gradient(160deg, #0e2138 0%, #0a1729 55%, #050b14 100%);
+  }
+
+  .ph-lines::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      115deg,
+      rgba(243, 241, 236, 0.035) 0px,
+      rgba(243, 241, 236, 0.035) 1px,
+      transparent 1px,
+      transparent 14px
+    );
+  }
+
+  /* Hero backdrop */
+  .hero-backdrop {
+    background:
+      radial-gradient(90% 70% at 78% 18%, rgba(30, 65, 102, 0.45), transparent 62%),
+      radial-gradient(70% 60% at 12% 85%, rgba(21, 48, 79, 0.6), transparent 58%),
+      linear-gradient(175deg, #0a1729 0%, #070f1c 60%, #050b14 100%);
+  }
+
+  .hero-backdrop::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(rgba(243, 241, 236, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(243, 241, 236, 0.04) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(80% 70% at 50% 40%, black 20%, transparent 75%);
+  }
+}
+
+@layer utilities {
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .text-outline {
+    -webkit-text-stroke: 1px rgba(245, 243, 238, 0.28);
+    color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
