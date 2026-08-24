@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CtaSection } from "@/components/CtaSection";
@@ -33,10 +34,23 @@ export default function ProjectPage({ params }: Props) {
     <>
       {/* Hero visual */}
       <div className="pt-16 sm:pt-20">
-        <PlaceholderImage
-          label={`${project.title} — hero visual`}
-          ratio="aspect-[16/9] w-full"
-        />
+        {project.cover ? (
+          <div className="relative aspect-[16/9] w-full">
+            <Image
+              src={project.cover}
+              alt={`${project.title} — hero`}
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          </div>
+        ) : (
+          <PlaceholderImage
+            label={`${project.title} — hero visual`}
+            ratio="aspect-[16/9] w-full"
+          />
+        )}
       </div>
 
       {/* Header */}
@@ -85,10 +99,26 @@ export default function ProjectPage({ params }: Props) {
       {/* Gallery */}
       <section aria-label="Project gallery" className="pb-20">
         <div className="container-site grid gap-6 md:grid-cols-2">
-          <PlaceholderImage label={`${project.title} — gallery image 01`} />
-          <PlaceholderImage label={`${project.title} — gallery image 02`} className="md:mt-14" />
-          <PlaceholderImage label={`${project.title} — gallery image 03`} className="md:-mt-8" />
-          <PlaceholderImage label={`${project.title} — gallery image 04`} />
+          {project.gallery && project.gallery.length > 0
+            ? project.gallery.map((src, i) => (
+                <div key={src + i} className={`relative aspect-[4/3] overflow-hidden ${i % 2 === 1 ? "md:mt-14" : ""}`}>
+                  <Image
+                    src={src}
+                    alt={`${project.title} — gallery ${i + 1}`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
+              ))
+            : (
+              <>
+                <PlaceholderImage label={`${project.title} — gallery image 01`} />
+                <PlaceholderImage label={`${project.title} — gallery image 02`} className="md:mt-14" />
+                <PlaceholderImage label={`${project.title} — gallery image 03`} className="md:-mt-8" />
+                <PlaceholderImage label={`${project.title} — gallery image 04`} />
+              </>
+            )}
         </div>
       </section>
 

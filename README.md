@@ -3,6 +3,27 @@
 Creative Portfolio + Company Profile + Lead Generation website for **FiveAM Agency**
 (People · Moments · Brands), built per the FiveAM Master Context v1.0.
 
+## Built-in CMS (`/admin`)
+
+Portfolio can be managed **without touching code** at `/admin` (password-protected,
+hidden from search engines):
+
+- Add / edit / delete projects
+- Upload cover & gallery photos (stored in the repo under `public/images/projects/`)
+- Toggle "Featured on homepage"
+- Saving commits to GitHub → Vercel auto-deploys → live in ±1–2 minutes
+
+Required environment variables:
+
+| Variable | Purpose |
+|---|---|
+| `ADMIN_PASSWORD` | Password untuk login CMS |
+| `GITHUB_TOKEN` | Fine-grained PAT, permission **Contents: Read and write**, scoped ke repo ini |
+| `GITHUB_OWNER` / `GITHUB_REPO` / `GITHUB_BRANCH` | Target repo (default: fajarramadhani / fiveamvision / main) |
+
+Set them locally in `.env.local` (see `.env.example`) and on Vercel
+(Project → Settings → Environment Variables).
+
 ## Stack
 
 - **Next.js 14** (App Router) + **TypeScript**

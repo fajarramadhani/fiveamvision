@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Project } from "@/lib/projects";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { Reveal } from "@/components/Reveal";
@@ -13,10 +14,20 @@ export function ProjectCard({ project, delay = 0, ratio = "aspect-[4/5]" }: Proj
   return (
     <Reveal delay={delay}>
       <Link href={`/work/${project.slug}`} className="group block">
-        <div className="overflow-hidden">
-          <div className="transition-transform duration-700 ease-smooth group-hover:scale-[1.03]">
-            <PlaceholderImage label={project.title} ratio={ratio} />
-          </div>
+        <div className="relative overflow-hidden">
+          {project.cover ? (
+            <Image
+              src={project.cover}
+              alt={project.title}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className={`${ratio} object-cover transition-transform duration-700 ease-smooth group-hover:scale-[1.03]`}
+            />
+          ) : (
+            <div className="transition-transform duration-700 ease-smooth group-hover:scale-[1.03]">
+              <PlaceholderImage label={project.title} ratio={ratio} />
+            </div>
+          )}
         </div>
         <div className="mt-5 flex items-baseline justify-between gap-4 border-t border-bone/10 pt-4">
           <div>
