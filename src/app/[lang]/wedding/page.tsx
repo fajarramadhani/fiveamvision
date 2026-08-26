@@ -4,46 +4,22 @@ import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProjectCard } from "@/components/ProjectCard";
 import { CtaSection } from "@/components/CtaSection";
-import { processSteps } from "@/lib/services";
+import { getDict, lp, type Locale } from "@/lib/i18n";
 import { projects } from "@/lib/projects";
 import { waLink } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Wedding Photographer & Videographer Jakarta",
-  description:
-    "Wedding photography, cinematic films, prewedding & intimate wedding documentation by FiveAM Agency. Every wedding has its own rhythm — we capture it as it happens.",
-};
+interface Props {
+  params: { lang: Locale };
+}
 
-const weddingServices = [
-  "Wedding Photography",
-  "Wedding Films",
-  "Engagement",
-  "Prewedding",
-  "Akad & Reception",
-  "Intimate Wedding",
-  "Couple Session",
-];
+export function generateMetadata({ params }: Props): Metadata {
+  const t = getDict(params.lang);
+  return { title: t.weddingPage.meta.title, description: t.weddingPage.meta.description };
+}
 
-const faqs = [
-  {
-    q: "How do we book FiveAM for our wedding date?",
-    a: "Chat kami via WhatsApp, ceritakan tanggal dan konsep acara. Jika tanggal tersedia, kami kirim rekomendasi package lalu booking dikunci dengan down payment.",
-  },
-  {
-    q: "Do you offer both photo and video?",
-    a: "Ya. Kami bisa menangani photography saja, videography saja, atau keduanya dalam satu tim yang sudah terbiasa bekerja bersama.",
-  },
-  {
-    q: "We're planning a small / intimate wedding. Is that okay?",
-    a: "Sangat okay. Intimate wedding justru punya ruang lebih besar untuk storytelling — kami menyesuaikan package dengan skala acaranya.",
-  },
-  {
-    q: "How many photos and how long is the film?",
-    a: "Jumlah foto dan durasi film menyesuaikan package. Yang kami janjikan bukan jumlahnya — tapi cerita yang tersampaikan dari hari tersebut.",
-  },
-];
-
-export default function WeddingPage() {
+export default function WeddingPage({ params }: Props) {
+  const { lang } = params;
+  const t = getDict(lang);
   const weddingStories = projects.filter((p) => p.category === "Wedding");
 
   return (
@@ -52,26 +28,28 @@ export default function WeddingPage() {
       <section className="hero-backdrop">
         <div className="container-site pb-14 pt-36 sm:pb-20 sm:pt-44">
           <Reveal>
-            <p className="eyebrow">Weddings</p>
-            <h1 className="font-display text-[13vw] font-bold leading-[0.95] tracking-tightest text-bone sm:text-7xl lg:text-8xl xl:text-[7rem]">
-              Your day,
+            <p className="eyebrow">{t.weddingPage.hero.eyebrow}</p>
+            <h1 className="break-words font-display text-[13vw] font-bold leading-[0.95] tracking-tightest text-bone sm:text-7xl lg:text-8xl xl:text-[7rem]">
+              {t.weddingPage.hero.title1}
               <br />
-              <em className="font-accent font-normal italic text-mist">your rhythm.</em>
+              <em className="font-accent font-normal italic text-mist">
+                {t.weddingPage.hero.title2}
+              </em>
             </h1>
             <p className="mt-7 max-w-md text-sm leading-relaxed text-steel sm:text-base">
-              Every wedding has its own rhythm, people and story. We capture it as it happens.
+              {t.weddingPage.hero.sub}
             </p>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
               <a
-                href={waLink("Hi FiveAM! I'd like to check availability for our wedding date.")}
+                href={waLink(t.weddingPage.hero.checkWaMessage)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary w-full sm:w-auto"
               >
-                Check Availability
+                {t.weddingPage.hero.checkAvailability}
               </a>
               <Link href="#wedding-stories" className="btn-outline w-full sm:w-auto">
-                See Wedding Stories
+                {t.weddingPage.hero.seeStories}
               </Link>
             </div>
           </Reveal>
@@ -82,13 +60,17 @@ export default function WeddingPage() {
       <section className="section-light">
         <div className="container-site py-20 sm:py-28">
           <Reveal>
-            <span className="eyebrow text-navy-600">Our Approach</span>
+            <span className="eyebrow text-navy-600">{t.weddingPage.approach.eyebrow}</span>
             <p className="max-w-3xl font-display text-2xl font-bold leading-snug tracking-tight text-night sm:text-4xl">
-              Kami tidak mengarahkan hari bahagia kamu seperti pemotretan.{" "}
-              <em className="font-accent font-normal italic text-navy-600">
-                Kami mendokumentasikan apa yang benar-benar terjadi
-              </em>{" "}
-              — tawa, air mata, dan momen kecil di sela-selanya.
+              {t.weddingPage.approach.segments.map((segment, i) =>
+                segment.a ? (
+                  <em key={i} className="font-accent font-normal italic text-navy-600">
+                    {segment.t}
+                  </em>
+                ) : (
+                  <span key={i}>{segment.t}</span>
+                )
+              )}
             </p>
           </Reveal>
         </div>
@@ -98,19 +80,22 @@ export default function WeddingPage() {
       <section id="wedding-stories" className="scroll-mt-24 border-t border-bone/10 bg-navy/40">
         <div className="container-site py-20 sm:py-28">
           <SectionHeading
-            eyebrow="Selected Wedding Stories"
+            eyebrow={t.weddingPage.stories.eyebrow}
             title={
               <>
-                Recent <em className="font-accent font-normal italic text-mist">celebrations.</em>
+                {t.weddingPage.stories.titlePlain}{" "}
+                <em className="font-accent font-normal italic text-mist">
+                  {t.weddingPage.stories.titleAccent}
+                </em>
               </>
             }
-            lead="Slot di bawah siap diisi dengan wedding stories asli FiveAM."
           />
           <div className="mt-12 grid gap-x-6 gap-y-12 md:grid-cols-2">
             {weddingStories.map((project, i) => (
               <ProjectCard
                 key={project.slug}
                 project={project}
+                lang={lang}
                 delay={i * 100}
                 ratio={i % 2 === 0 ? "aspect-[4/5]" : "aspect-[4/5] md:mt-16"}
               />
@@ -123,15 +108,18 @@ export default function WeddingPage() {
       <section>
         <div className="container-site grid gap-12 py-20 sm:py-28 lg:grid-cols-[1fr_1.4fr]">
           <SectionHeading
-            eyebrow="What's Included"
+            eyebrow={t.weddingPage.included.eyebrow}
             title={
               <>
-                Coverage for <em className="font-accent font-normal italic text-mist">every chapter.</em>
+                {t.weddingPage.included.titlePlain}{" "}
+                <em className="font-accent font-normal italic text-mist">
+                  {t.weddingPage.included.titleAccent}
+                </em>
               </>
             }
           />
           <ul className="grid gap-px self-start overflow-hidden border border-bone/10 bg-bone/10 sm:grid-cols-2">
-            {weddingServices.map((service) => (
+            {t.weddingPage.servicesList.map((service) => (
               <li key={service} className="bg-night p-6 text-sm font-medium text-bone/90">
                 {service}
               </li>
@@ -144,16 +132,16 @@ export default function WeddingPage() {
       <section className="border-t border-bone/10">
         <div className="container-site py-20 sm:py-28">
           <ol className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-            {processSteps.map((step, i) => (
-              <Reveal key={step.step} delay={i * 100}>
-                <li className="border-t border-bone/15 pt-6">
+            {t.home.process.steps.map((step, i) => (
+              <li key={step.step}>
+                <Reveal delay={i * 100} className="h-full border-t border-bone/15 pt-6">
                   <span className="font-accent text-2xl italic text-mist">{step.step}</span>
                   <h3 className="mt-4 font-display text-lg font-bold tracking-tight text-bone">
                     {step.title}
                   </h3>
                   <p className="mt-3 text-sm leading-relaxed text-steel">{step.body}</p>
-                </li>
-              </Reveal>
+                </Reveal>
+              </li>
             ))}
           </ol>
         </div>
@@ -163,15 +151,18 @@ export default function WeddingPage() {
       <section className="border-t border-bone/10 bg-navy/40">
         <div className="container-site grid gap-12 py-20 sm:py-28 lg:grid-cols-[1fr_1.6fr]">
           <SectionHeading
-            eyebrow="FAQ"
+            eyebrow={t.weddingPage.faq.eyebrow}
             title={
               <>
-                Questions, <em className="font-accent font-normal italic text-mist">answered.</em>
+                {t.weddingPage.faq.titlePlain}{" "}
+                <em className="font-accent font-normal italic text-mist">
+                  {t.weddingPage.faq.titleAccent}
+                </em>
               </>
             }
           />
           <div>
-            {faqs.map((faq) => (
+            {t.weddingPage.faq.items.map((faq) => (
               <details
                 key={faq.q}
                 className="group border-b border-bone/15 py-5 [&_summary::-webkit-details-marker]:hidden"
@@ -193,12 +184,11 @@ export default function WeddingPage() {
       </section>
 
       <CtaSection
-        title="Getting married soon?"
-        highlight="Let's tell your story properly."
-        primaryLabel="Check Availability"
-        whatsappMessage="Hi FiveAM! I'd like to check availability for our wedding date."
+        title={t.weddingPage.cta.title}
+        highlight={t.weddingPage.cta.highlight}
+        primaryLabel={t.weddingPage.cta.primary}
+        primaryHref={waLink(t.weddingPage.cta.waMessage)}
       />
     </>
   );
 }
-

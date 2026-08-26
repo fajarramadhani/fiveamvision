@@ -1,27 +1,39 @@
 import Link from "next/link";
-import { waLink } from "@/lib/site";
 import { Reveal } from "@/components/Reveal";
 
 interface CtaSectionProps {
-  title?: string;
-  highlight?: string;
+  title: string;
+  highlight: string;
   body?: string;
-  primaryLabel?: string;
+  primaryLabel: string;
   primaryHref?: string;
-  whatsappMessage?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
 }
 
 /**
  * Pre-footer conversion section — reused across every page.
+ * Fully prop-driven so each page supplies localized copy + links.
  */
+/** External links (WhatsApp etc.) and hash anchors render as plain anchors. */
+function isExternalHref(href: string): boolean {
+  return /^(https?:|mailto:|tel:|#)/.test(href);
+}
+
 export function CtaSection({
-  title = "Have a story to tell?",
-  highlight = "Let's create something worth remembering.",
-  body = "Tell us about your moment, your session or your brand. We'll help you turn it into a story people remember.",
-  primaryLabel = "Start a Project",
-  primaryHref = "/contact",
-  whatsappMessage = "Hi FiveAM! I'd like to discuss a project.",
+  title,
+  highlight,
+  body,
+  primaryLabel,
+  primaryHref = "/",
+  secondaryLabel,
+  secondaryHref,
 }: CtaSectionProps) {
+  const PrimaryTag = isExternalHref(primaryHref) ? "a" : Link;
+  const primaryProps =
+    PrimaryTag === "a"
+      ? { href: primaryHref, target: "_blank", rel: "noopener noreferrer" }
+      : { href: primaryHref };
   return (
     <section className="hero-backdrop relative overflow-hidden">
       <div className="container-site py-24 text-center sm:py-32 lg:py-40">
@@ -31,21 +43,25 @@ export function CtaSection({
             <br />
             <em className="font-accent font-normal italic text-mist">{highlight}</em>
           </h2>
-          <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-steel sm:text-base">
-            {body}
-          </p>
+          {body ? (
+            <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-steel sm:text-base">
+              {body}
+            </p>
+          ) : null}
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link href={primaryHref} className="btn-primary w-full sm:w-auto">
+            <PrimaryTag {...primaryProps} className="btn-primary w-full sm:w-auto">
               {primaryLabel}
-            </Link>
-            <a
-              href={waLink(whatsappMessage)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-outline w-full sm:w-auto"
-            >
-              Talk to FiveAM
-            </a>
+            </PrimaryTag>
+            {secondaryLabel && secondaryHref ? (
+              <a
+                href={secondaryHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline w-full sm:w-auto"
+              >
+                {secondaryLabel}
+              </a>
+            ) : null}
           </div>
         </Reveal>
       </div>

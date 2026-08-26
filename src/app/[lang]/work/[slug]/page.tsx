@@ -5,10 +5,12 @@ import { notFound } from "next/navigation";
 import { CtaSection } from "@/components/CtaSection";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { Reveal } from "@/components/Reveal";
+import { getDict, lp, type Locale } from "@/lib/i18n";
 import { getProject, projects } from "@/lib/projects";
+import { waLink } from "@/lib/site";
 
 interface Props {
-  params: { slug: string };
+  params: { lang: Locale; slug: string };
 }
 
 export function generateStaticParams() {
@@ -28,6 +30,8 @@ export default function ProjectPage({ params }: Props) {
   const project = getProject(params.slug);
   if (!project) notFound();
 
+  const { lang } = params;
+  const t = getDict(lang);
   const others = projects.filter((p) => p.slug !== project.slug).slice(0, 2);
 
   return (
@@ -49,6 +53,7 @@ export default function ProjectPage({ params }: Props) {
           <PlaceholderImage
             label={`${project.title} — hero visual`}
             ratio="aspect-[16/9] w-full"
+            lang={lang}
           />
         )}
       </div>
@@ -69,23 +74,29 @@ export default function ProjectPage({ params }: Props) {
           <Reveal delay={120}>
             <dl className="space-y-5 border-t border-bone/15 pt-6 text-sm lg:border-t-0 lg:pt-8">
               <div className="flex justify-between gap-6 border-b border-bone/10 pb-4">
-                <dt className="text-[11px] uppercase tracking-widest text-steel/70">Category</dt>
+                <dt className="text-[11px] uppercase tracking-widest text-steel/85">
+                  {t.projectDetail.labels.category}
+                </dt>
                 <dd className="text-bone">{project.category}</dd>
               </div>
               <div className="flex justify-between gap-6 border-b border-bone/10 pb-4">
-                <dt className="text-[11px] uppercase tracking-widest text-steel/70">Year</dt>
+                <dt className="text-[11px] uppercase tracking-widest text-steel/85">
+                  {t.projectDetail.labels.year}
+                </dt>
                 <dd className="text-bone">{project.year}</dd>
               </div>
               <div className="flex justify-between gap-6 border-b border-bone/10 pb-4">
-                <dt className="text-[11px] uppercase tracking-widest text-steel/70">Client</dt>
-                <dd className="text-right text-bone">{project.client ?? "[TO BE PROVIDED]"}</dd>
+                <dt className="text-[11px] uppercase tracking-widest text-steel/85">
+                  {t.projectDetail.labels.client}
+                </dt>
+                <dd className="text-right text-bone">{project.client ?? t.projectDetail.clientTba}</dd>
               </div>
               {project.credits.map((credit) => (
                 <div
                   key={credit.role}
                   className="flex justify-between gap-6 border-b border-bone/10 pb-4"
                 >
-                  <dt className="text-[11px] uppercase tracking-widest text-steel/70">
+                  <dt className="text-[11px] uppercase tracking-widest text-steel/85">
                     {credit.role}
                   </dt>
                   <dd className="text-right text-bone">{credit.name}</dd>
@@ -97,7 +108,7 @@ export default function ProjectPage({ params }: Props) {
       </section>
 
       {/* Gallery */}
-      <section aria-label="Project gallery" className="pb-20">
+      <section aria-label={t.projectDetail.galleryAria} className="pb-20">
         <div className="container-site grid gap-6 md:grid-cols-2">
           {project.gallery && project.gallery.length > 0
             ? project.gallery.map((src, i) => (
@@ -113,10 +124,10 @@ export default function ProjectPage({ params }: Props) {
               ))
             : (
               <>
-                <PlaceholderImage label={`${project.title} — gallery image 01`} />
-                <PlaceholderImage label={`${project.title} — gallery image 02`} className="md:mt-14" />
-                <PlaceholderImage label={`${project.title} — gallery image 03`} className="md:-mt-8" />
-                <PlaceholderImage label={`${project.title} — gallery image 04`} />
+                <PlaceholderImage label={`${project.title} — gallery image 01`} lang={lang} />
+                <PlaceholderImage label={`${project.title} — gallery image 02`} className="md:mt-14" lang={lang} />
+                <PlaceholderImage label={`${project.title} — gallery image 03`} className="md:-mt-8" lang={lang} />
+                <PlaceholderImage label={`${project.title} — gallery image 04`} lang={lang} />
               </>
             )}
         </div>
@@ -126,13 +137,13 @@ export default function ProjectPage({ params }: Props) {
       <section className="border-t border-bone/10 bg-navy/40">
         <div className="container-site py-16 sm:py-20">
           <h2 className="font-display text-2xl font-bold tracking-tightest text-bone sm:text-3xl">
-            More stories
+            {t.projectDetail.moreStories}
           </h2>
           <div className="mt-8 grid gap-6 sm:grid-cols-2">
             {others.map((other) => (
               <Link
                 key={other.slug}
-                href={`/work/${other.slug}`}
+                href={lp(lang, `/work/${other.slug}`)}
                 className="group flex items-center justify-between gap-6 border border-bone/10 p-6 transition-colors hover:border-bone/30"
               >
                 <div>
@@ -153,10 +164,14 @@ export default function ProjectPage({ params }: Props) {
       </section>
 
       <CtaSection
-        title="Have a similar story?"
-        highlight="Start a Similar Project."
-        primaryLabel="Start a Similar Project"
-        whatsappMessage={`Hi FiveAM! I saw "${project.title}" and I'd love to create something similar.`}
+        title={t.projectDetail.similarTitle}
+        highlight={t.projectDetail.similarHighlight}
+        primaryLabel={t.projectDetail.similarPrimary}
+        primaryHref={lp(lang, "/contact")}
+        secondaryLabel={t.ctaDefault.secondary}
+        secondaryHref={waLink(
+          `${t.projectDetail.similarWaPrefix}${project.title}${t.projectDetail.similarWaSuffix}`
+        )}
       />
     </>
   );

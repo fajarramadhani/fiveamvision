@@ -3,22 +3,22 @@ import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProjectCard } from "@/components/ProjectCard";
 import { CtaSection } from "@/components/CtaSection";
+import { getDict, type Locale } from "@/lib/i18n";
 import { projects } from "@/lib/projects";
 import { waLink } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Brand & UMKM Content Production Jakarta",
-  description:
-    "Product photography, campaign, lifestyle content, reels, short-form video & creative direction for growing brands and UMKM. Content made to move your brand forward.",
-};
+interface Props {
+  params: { lang: Locale };
+}
 
-const brandServices = [
-  { title: "Photography", items: ["Product", "Campaign", "Lifestyle", "Food", "Fashion"] },
-  { title: "Video Content", items: ["Reels", "Short-form video", "Cinematic", "Product video"] },
-  { title: "Creative", items: ["Creative Direction", "Social Media Content", "Campaign Concept"] },
-];
+export function generateMetadata({ params }: Props): Metadata {
+  const t = getDict(params.lang);
+  return { title: t.brandPage.meta.title, description: t.brandPage.meta.description };
+}
 
-export default function BrandPage() {
+export default function BrandPage({ params }: Props) {
+  const { lang } = params;
+  const t = getDict(lang);
   const brandStories = projects.filter((p) => p.category === "Brand");
 
   return (
@@ -27,24 +27,25 @@ export default function BrandPage() {
       <section className="hero-backdrop">
         <div className="container-site pb-14 pt-36 sm:pb-20 sm:pt-44">
           <Reveal>
-            <p className="eyebrow">Brands &amp; UMKM</p>
-            <h1 className="font-display text-[13vw] font-bold leading-[0.95] tracking-tightest text-bone sm:text-7xl lg:text-8xl xl:text-[7rem]">
-              Content made to
+            <p className="eyebrow">{t.brandPage.hero.eyebrow}</p>
+            <h1 className="break-words font-display text-[13vw] font-bold leading-[0.95] tracking-tightest text-bone sm:text-7xl lg:text-8xl xl:text-[7rem]">
+              {t.brandPage.hero.title1}
               <br />
-              <em className="font-accent font-normal italic text-mist">move you forward.</em>
+              <em className="font-accent font-normal italic text-mist">
+                {t.brandPage.hero.title2}
+              </em>
             </h1>
             <p className="mt-7 max-w-md text-sm leading-relaxed text-steel sm:text-base">
-              Untuk UMKM dan brand yang sedang tumbuh — bukan sekadar foto produk,
-              tapi konten dengan arah kreatif yang jelas.
+              {t.brandPage.hero.sub}
             </p>
             <div className="mt-9">
               <a
-                href={waLink("Hi FiveAM! I'd like to discuss content production for my brand.")}
+                href={waLink(t.brandPage.hero.discussWaMessage)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary w-full sm:w-auto"
               >
-                Discuss Your Project
+                {t.brandPage.hero.discussBtn}
               </a>
             </div>
           </Reveal>
@@ -55,16 +56,18 @@ export default function BrandPage() {
       <section>
         <div className="container-site py-20 sm:py-28">
           <SectionHeading
-            eyebrow="Capabilities"
+            eyebrow={t.brandPage.capabilities.eyebrow}
             title={
               <>
-                One partner,{" "}
-                <em className="font-accent font-normal italic text-mist">full coverage.</em>
+                {t.brandPage.capabilities.titlePlain}{" "}
+                <em className="font-accent font-normal italic text-mist">
+                  {t.brandPage.capabilities.titleAccent}
+                </em>
               </>
             }
           />
           <div className="mt-12 grid gap-10 md:grid-cols-3">
-            {brandServices.map((service, i) => (
+            {t.brandPage.groups.map((service, i) => (
               <Reveal key={service.title} delay={i * 100}>
                 <div className="border-t-2 border-navy-600 pt-6">
                   <h3 className="font-display text-xl font-bold tracking-tight text-bone">
@@ -90,22 +93,23 @@ export default function BrandPage() {
         <div className="container-site grid gap-8 py-16 sm:py-20 lg:grid-cols-[1.3fr_1fr] lg:items-center">
           <Reveal>
             <h2 className="font-display text-2xl font-bold tracking-tightest text-bone sm:text-4xl">
-              Butuh konten{" "}
-              <em className="font-accent font-normal italic text-mist">terus-menerus?</em>
+              {t.brandPage.monthly.titlePlain}{" "}
+              <em className="font-accent font-normal italic text-mist">
+                {t.brandPage.monthly.titleAccent}
+              </em>
             </h2>
             <p className="mt-4 max-w-lg text-sm leading-relaxed text-steel sm:text-base">
-              Monthly Content Production: photoshoot, reels dan content assets setiap bulan —
-              feed brand kamu selalu hidup tanpa kamu mikir tiap bulan.
+              {t.brandPage.monthly.body}
             </p>
           </Reveal>
           <Reveal delay={120}>
             <a
-              href={waLink("Hi FiveAM! I'm interested in the monthly content production.")}
+              href={waLink(t.brandPage.monthly.waMessage)}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-outline w-fit"
             >
-              Ask About Monthly Plan
+              {t.brandPage.monthly.btn}
             </a>
           </Reveal>
         </div>
@@ -115,27 +119,31 @@ export default function BrandPage() {
       <section>
         <div className="container-site py-20 sm:py-28">
           <SectionHeading
-            eyebrow="Selected Brand Work"
+            eyebrow={t.brandPage.stories.eyebrow}
             title={
               <>
-                Campaigns, not just{" "}
-                <em className="font-accent font-normal italic text-mist">product shots.</em>
+                {t.brandPage.stories.titlePlain}{" "}
+                <em className="font-accent font-normal italic text-mist">
+                  {t.brandPage.stories.titleAccent}
+                </em>
               </>
             }
           />
           <div className="mt-12 grid gap-x-6 gap-y-12 md:grid-cols-2">
             {brandStories.map((project, i) => (
-              <ProjectCard key={project.slug} project={project} delay={i * 100} ratio="aspect-[4/3]" />
+              <ProjectCard key={project.slug} project={project} lang={lang} delay={i * 100} ratio="aspect-[4/3]" />
             ))}
           </div>
         </div>
       </section>
 
       <CtaSection
-        title="Have a brand to build?"
-        highlight="Let's make content that works."
-        primaryLabel="Discuss Your Project"
-        whatsappMessage="Hi FiveAM! I'd like to discuss a project for my brand."
+        title={t.brandPage.cta.title}
+        highlight={t.brandPage.cta.highlight}
+        primaryLabel={t.brandPage.cta.primary}
+        primaryHref={waLink(t.brandPage.cta.waMessage)}
+        secondaryLabel={t.ctaDefault.secondary}
+        secondaryHref={waLink(t.ctaDefault.waMessage)}
       />
     </>
   );

@@ -1,9 +1,14 @@
 import type { MetadataRoute } from "next";
 import { projects } from "@/lib/projects";
 import { siteConfig } from "@/lib/site";
+import { defaultLocale, locales } from "@/lib/i18n/config";
 
+/**
+ * One entry per localized URL, cross-linked via hreflang alternates
+ * so search engines serve the right language version.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = [
+  const routes = [
     "",
     "/work",
     "/services",
@@ -12,15 +17,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/brand",
     "/about",
     "/contact",
-  ].map((route) => ({
-    url: `${siteConfig.url}${route}`,
-    lastModified: new Date(),
-  }));
+    ...projects.map((project) => `/work/${project.slug}`),
+  ];
 
-  const projectRoutes = projects.map((project) => ({
-    url: `${siteConfig.url}/work/${project.slug}`,
-    lastModified: new Date(),
-  }));
+  const now = new Date();
 
-  return [...staticRoutes, ...projectRoutes];
+  return routes.map((route) => {
+    const path = route === "" ? "" : route;
+    const urlFor = (lang: string) => `${siteConfig.url}/${lang}${path}`;
+
+    return {
+      url: urlFor(defaultLocale),
+      lastModified: now,
+      alternates: {
+        languages: {
+          ...Object.fromEntries(locales.map((lang) => [lang, urlFor(lang)])),
+          "x-default": urlFor(defaultLocale),
+        },
+      },
+    };
+  });
 }

@@ -1,28 +1,37 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/Reveal";
 import { WorkFilter } from "@/components/WorkFilter";
+import { getDict, type Locale } from "@/lib/i18n";
 import { projects } from "@/lib/projects";
 
-export const metadata: Metadata = {
-  title: "Work — Selected Stories",
-  description:
-    "Selected stories from FiveAM Agency — weddings, graduation sessions, portraits and brand campaigns in Jakarta, Indonesia.",
-};
+interface Props {
+  params: { lang: Locale };
+}
 
-export default function WorkPage() {
+export function generateMetadata({ params }: Props): Metadata {
+  const t = getDict(params.lang);
+  return { title: t.workPage.meta.title, description: t.workPage.meta.description };
+}
+
+export default function WorkPage({ params }: Props) {
+  const { lang } = params;
+  const t = getDict(lang);
+
   return (
     <>
       <section className="hero-backdrop">
         <div className="container-site pb-14 pt-36 sm:pb-20 sm:pt-44">
           <Reveal>
-            <p className="eyebrow">Our Work</p>
+            <p className="eyebrow">{t.workPage.eyebrow}</p>
             <h1 className="font-display text-5xl font-bold leading-[0.95] tracking-tightest text-bone sm:text-7xl lg:text-8xl">
-              Selected
+              {t.workPage.title1}
               <br />
-              <em className="font-accent font-normal italic text-mist">Stories.</em>
+              <em className="font-accent font-normal italic text-mist">
+                {t.workPage.title2}
+              </em>
             </h1>
             <p className="mt-7 max-w-md text-sm leading-relaxed text-steel sm:text-base">
-              Setiap project adalah cerita. Filter berdasarkan kebutuhanmu — atau lihat semuanya.
+              {t.workPage.sub}
             </p>
           </Reveal>
         </div>
@@ -30,7 +39,7 @@ export default function WorkPage() {
 
       <section className="border-t border-bone/10">
         <div className="container-site py-16 sm:py-24">
-          <WorkFilter items={projects} />
+          <WorkFilter items={projects} lang={lang} t={t.workFilter} />
         </div>
       </section>
     </>

@@ -1,3 +1,5 @@
+import { getDict, type Locale } from "@/lib/i18n";
+
 interface PlaceholderImageProps {
   /** Short label identifying what image should replace this block. */
   label: string;
@@ -5,6 +7,7 @@ interface PlaceholderImageProps {
   ratio?: string;
   className?: string;
   compact?: boolean;
+  lang?: Locale;
 }
 
 /**
@@ -16,11 +19,14 @@ export function PlaceholderImage({
   ratio = "aspect-[4/5]",
   className = "",
   compact = false,
+  lang = "en",
 }: PlaceholderImageProps) {
+  const t = getDict(lang).placeholder;
+
   return (
     <div
       role="img"
-      aria-label={`Placeholder visual — replace with FiveAM project photo: ${label}`}
+      aria-label={`${t.ariaPrefix}${label}`}
       className={`ph-visual ph-lines relative flex flex-col items-center justify-center overflow-hidden ${ratio} ${className}`}
     >
       {/* Corner marks */}
@@ -34,12 +40,12 @@ export function PlaceholderImage({
           compact ? "text-[9px]" : "text-[10px]"
         }`}
       >
-        Replace with FiveAM project image
+        {t.replaceText}
       </p>
       <p
         className={`mt-2 px-6 text-center font-display ${
           compact ? "text-xs" : "text-sm"
-        } text-bone/70`}
+        } text-bone/80`}
       >
         {label}
       </p>

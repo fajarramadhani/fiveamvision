@@ -19,6 +19,11 @@ const config: Config = {
         sand: "#E5E1D8",
         ash: "#6B7280",
         steel: "#93A1B5",
+        // WhatsApp brand green — instant recognition on the floating CTA
+        whatsapp: {
+          DEFAULT: "#25D366",
+          dark: "#1DA851",
+        },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],

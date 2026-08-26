@@ -70,9 +70,11 @@ Other placeholders (marked inline as `TO BE PROVIDED` / `PLACEHOLDER`):
   Every visual slot renders a styled `PlaceholderImage` block labelled
   *"Replace with FiveAM project image"* — swap it for `<Image>`/`<img>` when real
   photography is available.
-- **Testimonials & client logos** → Home page "Kind Words" section.
-- **Team members** → About page.
-- **OG image** → add `public/og.jpg` (1200×630) and uncomment in `src/app/layout.tsx`.
+- **Testimonials & client logos** → isi array `testimonials` / `clientLogos` di
+  [`src/app/page.tsx`](src/app/page.tsx) — section-nya otomatis tampil begitu ada isinya
+  (disembunyikan selama masih kosong).
+- **Team members** → isi array `team` di [`src/app/about/page.tsx`](src/app/about/page.tsx).
+- **OG image** → sudah ada di `public/og.jpg` (1200×630); regenerate bila rebrand.
 
 No fake clients, testimonials or statistics are used anywhere, per the Master Context.
 
