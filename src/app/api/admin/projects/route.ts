@@ -81,8 +81,12 @@ export async function POST(req: Request) {
           "Saved & committed to GitHub. Vercel is deploying — live in ±1–2 minutes.",
       });
     } catch (err) {
+      const raw = String(err);
+      const hint = raw.includes("403")
+        ? " Token GitHub kamu belum punya izin menulis. Buka github.com/settings/personal-access-tokens → pilih token → pastikan Repository access memuat repo fiveamvision dan Permission 'Contents' = Read and write."
+        : "";
       return NextResponse.json(
-        { error: `GitHub commit failed: ${String(err).slice(0, 300)}` },
+        { error: `GitHub commit failed: ${raw.slice(0, 240)}${hint}` },
         { status: 502 }
       );
     }

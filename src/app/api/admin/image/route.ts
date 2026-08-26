@@ -53,8 +53,12 @@ export async function POST(req: Request) {
       });
       return NextResponse.json({ ok: true, url, mode: "github" });
     } catch (err) {
+      const raw = String(err);
+      const hint = raw.includes("403")
+        ? " Token GitHub kamu belum punya izin menulis (Contents: Read and write)."
+        : "";
       return NextResponse.json(
-        { error: `GitHub upload failed: ${String(err).slice(0, 300)}` },
+        { error: `GitHub upload failed: ${raw.slice(0, 240)}${hint}` },
         { status: 502 }
       );
     }
